@@ -1,2 +1,2 @@
-# TypingMaster_with_Usman
+# typing-master-with-usman
 Typing speed calculator
