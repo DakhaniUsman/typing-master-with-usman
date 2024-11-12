@@ -1,5 +1,6 @@
 // script.js
-const quoteApiUrl = "https://api.quotable.io/random?minLength=85&maxLength=100";
+// const quoteApiUrl = "https://api.quotable.io/random?minLength=85&maxLength=100";
+const quoteApiUrl = "https://dummyjson.com/quotes/random?minLength=30&maxLength=50";
 const quoteSection = document.getElementById("quote");
 const userInput = document.getElementById('quote-input');
 
@@ -9,22 +10,31 @@ let time = 60;
 let timer = "";
 
 const renderNewQuote = async () => {
-    //Fetch content from URL
-    const responce = await fetch(quoteApiUrl);
-    //Store responce
-    const data = await responce.json();
-    console.log(data);
-    //Access content from JSON
-    quote = data.content;
-    console.log(quote);
-    let arr = quote.split("").map((value) => {
-        //wrap the each character in span tag
-        return "<span class='quote-chars'>" + value + "</span>"
-    });
+    try {
+        // Fetch content from URL
+        const response = await fetch(quoteApiUrl);
+        const data = await response.json();
 
-    quoteSection.innerHTML = arr.join("");
-    console.log(arr);
+        // Check if data contains the quote
+        if (data && data.quote) { // Adjust based on API response
+            quote = data.quote; // Update 'quote' based on the actual API response
+        } else {
+            throw new Error("Quote content not found in the response.");
+        }
+
+        // Split quote text into spans
+        let arr = quote.split("").map((value) => {
+            return "<span class='quote-chars'>" + value + "</span>";
+        });
+
+        // Render the quote in the quote section
+        quoteSection.innerHTML = arr.join("");
+    } catch (error) {
+        console.error("Error fetching quote:", error);
+        quoteSection.innerHTML = "<p>Could not load a new quote. Please try again later.</p>";
+    }
 }
+
 //Logic for comparing input words with quote
 
 userInput.addEventListener("input", () => {
